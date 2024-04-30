@@ -4,12 +4,10 @@
 [Insert final project video here]
 
 ### 2. Images
-
-![alt text](IMG_0222.JPG)
-![alt text](IMG_0223.JPG)
-![alt text](IMG_0224.JPG)
-![alt text](IMG_0225.JPG)
-![alt text](IMG_0226.JPG)
+![IMG_0222](https://github.com/JiaxiaoGabrielZhangEE/AutoPlant.github.io/assets/157425369/ffa7cc6c-ceb5-4a2c-a873-5453f4be1f71)
+![IMG_0223](https://github.com/JiaxiaoGabrielZhangEE/AutoPlant.github.io/assets/157425369/f169b22e-737a-4caf-b170-8d3ec87e9a46)
+![IMG_0225](https://github.com/JiaxiaoGabrielZhangEE/AutoPlant.github.io/assets/157425369/178cd1e2-83c7-4be8-bf4b-744dda9307da)
+![IMG_0226](https://github.com/JiaxiaoGabrielZhangEE/AutoPlant.github.io/assets/157425369/4003c6b6-a0ad-49b6-bb3f-62a708ec9454)
 
 ### 3. Results
 
@@ -19,11 +17,35 @@ The final solution was a platform for the plant to be put onto. This platform ha
 
 #### 3.1 Software Requirements Specification (SRS) Results
 
+Here were our original SRS:
+
+* ADC for moisture shall update every 200ms.
+* ATMEGA shall control water pump such that it maintains ADC values between 530-570
+* ATMEGA shall be able control the cart in all 6 directions (forward, reverse, left, right, strafe left, strafe right)
+* When bump sensor is pressed, platform shall stop in 0.5s
+* ATMEGA shall correctly identify the brightest light direction, and control the motors to follow it using a combination of directional moves
+* ATMEGA shall determine if the platform is in uniform lighting and not move
+* OLED screen shall immediately update after reading moisture values, i.e. every 200ms.
+* ATMEGA computes the route around blocks towards the location with strongest light
+
 We sucessfully met most of our SRS. First, we programmed our ATMEGA to poll the moisture sensor every 200ms, and update the OLED per reading. Moreover, our water pump stops when ADC is between 530-570. This is done by watering drop by drop so that the ADC values have time to update. By changing the directions of each motor through H-bridge manipulation, we were also able to get the cart to move in all 6 of the specified directions, automatically and manually through Blynk. Our ATEMGA also can detect and not move when the cart is in uniform lighting (ADC values are within 120 of each other), and can track the direction of the brightest light direction. It can follow a flashlight pointed at one corner. Lastly, the bump sensor is set up such that when it is initially pressed down, an edge capture on Timer 4 activates, which then activates timer 3. When timer 3 overflows (in approximately 0.47s due to 256 prescalar), the status of the button is checked again to make sure it is actually pressed. Then, the platform stops. Thus, this e-stop occurs less than half a second, as specified.
 
 However due to time constraints, we decided that we could not finish software route-planning using data from ultrasonic sensors. Also, given that the processor needs to control motor movement, it is extremely difficult to fit in another computationally-complex and real-time monitoring task without a multicore MCU. Thus, we weren't able to meet our stretch goal of route planning, but we were able to detect crashes and stop the cart. 
 
 #### 3.2 Hardware Requirements Specification (HRS) Results
+
+Here were our original HRS:
+* Project shall be based on ATmega328PB and ESP 32 microcontrollers
+* ESP 32 shall maintain WIFI connection to BLYNK at all times
+* ESP 32 should have its own battery to remain connected to Blynk even while the other components are off
+* Project shall have a battery life greater than 30 mins
+* Motorcontrollers shall be able to spin motors in both directions using H bridge. 
+* Water pump shall not overwater the plant, i.e. dumping the entire water tank into the soil
+* A capacitive soil sensor with ADC reading shall be used
+* 4 light dependent resistors shall be used to determine bighest lighting direction shall be used
+* A push switch shall be used as a bump sensor to detect crashes. 
+* OLED screen from Pong lab shall be used to display moisture status in 3 levels: too little, just right, and too much
+* Ultrasonic sensor should be used to plan a path to the destination around any objects in the way
 
 In general, we also reached our HRS. Our project is made using 2 ATMEGA 328PB boards with one ESP 32 for IOT. One Atmega is used for LDR monitoring, motor control and collision detection, while the other one is used for water monitoring. Our ESP is used solely for manual control of the cart movement on Blynk. For power management, our cart operates on 8 AA batteries, providing more than 30 mins of battery life, as we have been testing the platform for more than that time without any change in battery needed. Moreover, the ESP also has its own power source so that it can remain connected to Blynk even when the main switch is turned off. This is done because if the ESP powers down, it goes into an error state, and needs its code reflashed (something we want to avoid). Our motor controllers were also able to switch the forward/reverse directions of each motor, ensuring our cart can move in any of the 6 specified directions by controlling each wheel's spin direction. Our 4 light-dependent resistors are also mounted to each corner of the cart to provide accurate detection of which direction has the strongest light. As said above in the SRS, this allows the Atmega to control the cart to move in that direction. Our soil moisture sensor can correctly detect the amount of moisture in the soil, and in turn activate the pump. We sucessfully controlled the pumping rate such that only one drop of water goes into the soil per pump. This avoids any chance of overwatering. Our OLED screen also is able to show the different water levels using frowny or happy faces. 
 
