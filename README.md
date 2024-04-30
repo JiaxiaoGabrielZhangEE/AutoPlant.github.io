@@ -1,5 +1,5 @@
 # Autonomous Basil Plant
-By Gabriel Zhang, Nami Lindquist
+By Gabriel Zhang, Nami Lindquist 
 ### 1. Video
 
 [Insert final project video here]
